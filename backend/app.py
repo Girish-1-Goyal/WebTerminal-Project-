@@ -8,7 +8,12 @@ from commands.system_commands import SystemCommands
 from commands.network_commands import NetworkCommands
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS
+CORS(app, resources={
+    r"/execute": {"origins": ["https://*.netlify.app", "http://localhost:3000"]},
+    r"/history": {"origins": ["https://*.netlify.app", "http://localhost:3000"]}
+})
 
 class TerminalController:
     def __init__(self):
@@ -91,4 +96,5 @@ def get_history():
     return jsonify(terminal.command_history)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

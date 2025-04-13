@@ -1,5 +1,5 @@
 .terminal-container {
-    background-color: #000000;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -7,14 +7,16 @@
     top: 0;
     left: 0;
     font-family: 'Fira Code', monospace;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .terminal-header {
-    background-color: #1a1a1a;
-    padding: 8px;
+    background: rgba(26, 26, 46, 0.95);
+    padding: 10px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #32cd32;
+    border-bottom: 1px solid #4a4a8a;
+    backdrop-filter: blur(10px);
 }
 
 .terminal-buttons {
@@ -26,46 +28,66 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    border: 1px solid #32cd32;
+    transition: all 0.3s ease;
 }
 
-.close { background-color: #ff0000; }
-.minimize { background-color: #ffbd2e; }
-.maximize { background-color: #32cd32; }
+.close { 
+    background-color: #ff5f56;
+    border: 1px solid #ff5f56;
+}
+.minimize { 
+    background-color: #ffbd2e;
+    border: 1px solid #ffbd2e;
+}
+.maximize { 
+    background-color: #27c93f;
+    border: 1px solid #27c93f;
+}
+
+.terminal-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px currentColor;
+}
 
 .terminal-title {
-    color: #32cd32;
+    color: #e1e1e1;
     margin-left: 20px;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .terminal-body {
     padding: 20px;
     height: calc(100vh - 50px);
-    overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    background: rgba(22, 33, 62, 0.95);
     position: relative;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
 }
 
-/* Custom scrollbar */
-.terminal-body::-webkit-scrollbar {
-    width: 8px;
+.terminal-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.terminal-body::-webkit-scrollbar-track {
-    background: #000000;
-}
-
-.terminal-body::-webkit-scrollbar-thumb {
-    background: #32cd32;
-    border-radius: 4px;
+.terminal-lines {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .terminal-line {
     margin-bottom: 10px;
     animation: fadeIn 0.3s ease-in;
+    word-break: break-word;
 }
 
 .prompt {
@@ -75,36 +97,36 @@
 }
 
 .user { 
-    color: #32cd32;
-    text-shadow: 0 0 5px #32cd32;
+    color: #7aa2f7;
+    text-shadow: 0 0 5px rgba(122, 162, 247, 0.5);
 }
 
 .separator { 
-    color: #32cd32;
-    text-shadow: 0 0 5px #32cd32;
+    color: #bb9af7;
+    text-shadow: 0 0 5px rgba(187, 154, 247, 0.5);
 }
 
 .directory { 
-    color: #00ffff;
-    text-shadow: 0 0 5px #00ffff;
+    color: #9ece6a;
+    text-shadow: 0 0 5px rgba(158, 206, 106, 0.5);
 }
 
 .symbol { 
-    color: #32cd32;
-    text-shadow: 0 0 5px #32cd32;
+    color: #f7768e;
+    text-shadow: 0 0 5px rgba(247, 118, 142, 0.5);
 }
 
 .command {
-    color: #ffffff;
-    text-shadow: 0 0 5px #ffffff;
+    color: #e0af68;
+    text-shadow: 0 0 5px rgba(224, 175, 104, 0.5);
     margin-left: 5px;
 }
 
 .output {
-    color: #32cd32;
+    color: #a9b1d6;
     margin-top: 5px;
     white-space: pre-wrap;
-    text-shadow: 0 0 5px #32cd32;
+    text-shadow: 0 0 5px rgba(169, 177, 214, 0.5);
 }
 
 .terminal-input {
@@ -115,18 +137,20 @@
 .terminal-input input {
     background: transparent;
     border: none;
-    color: #32cd32;
+    color: #bb9af7;
     font-family: 'Fira Code', monospace;
     font-size: inherit;
     outline: none;
     width: calc(100% - 200px);
-    text-shadow: 0 0 5px #32cd32;
+    text-shadow: 0 0 5px rgba(187, 154, 247, 0.5);
+    caret-color: #bb9af7;
 }
 
 /* Blinking cursor effect */
 .terminal-input input::after {
     content: '█';
     animation: blink 1s step-end infinite;
+    color: #bb9af7;
 }
 
 /* Animations */
@@ -136,8 +160,14 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Matrix-style background effect */
@@ -150,7 +180,7 @@
     height: 100%;
     background: linear-gradient(
         0deg,
-        rgba(0, 255, 0, 0.03) 25%,
+        rgba(122, 162, 247, 0.03) 25%,
         transparent
     );
     pointer-events: none;
@@ -166,106 +196,111 @@
     height: 100%;
     background: repeating-linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.15),
-        rgba(0, 0, 0, 0.15) 1px,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 1px,
         transparent 1px,
         transparent 2px
     );
     pointer-events: none;
+    animation: scan 10s linear infinite;
+}
+
+@keyframes scan {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
 }
 
 /* Error message styling */
 .error {
-    color: #ff0000;
-    text-shadow: 0 0 5px #ff0000;
+    color: #f7768e;
+    text-shadow: 0 0 5px rgba(247, 118, 142, 0.5);
 }
 
 /* Success message styling */
 .success {
-    color: #32cd32;
-    text-shadow: 0 0 5px #32cd32;
+    color: #9ece6a;
+    text-shadow: 0 0 5px rgba(158, 206, 106, 0.5);
 }
 
 /* Add these styles for the indicators */
 .terminal-indicators {
-  position: fixed;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100px;
-  height: calc(100vh - 100px);
-  padding: 20px 0;
-  pointer-events: none;
-  z-index: 1000;
+    position: fixed;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100px;
+    height: calc(100vh - 100px);
+    padding: 20px 0;
+    pointer-events: none;
+    z-index: 1000;
 }
 
 .radar {
-  position: fixed;
-  top: 70px;
-  right: 40px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid #00ff00;
+    position: fixed;
+    top: 70px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #7aa2f7;
+    box-shadow: 0 0 10px rgba(122, 162, 247, 0.3);
 }
 
 .radar::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent 50%, rgba(0, 255, 0, 0.2) 100%);
-  border-radius: 50%;
-  animation: radarSpin 2s linear infinite;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 50%, rgba(122, 162, 247, 0.2) 100%);
+    border-radius: 50%;
+    animation: radarSpin 2s linear infinite;
 }
 
 .cpu-pulse {
-  position: fixed;
-  bottom: 10px;
-  right: 40px;
-  width: 60px;
-  height: 30px;
+    position: fixed;
+    bottom: 10px;
+    right: 40px;
+    width: 60px;
+    height: 30px;
 }
 
 .pulse-line {
-  width: 100%;
-  height: 2px;
-  background-color: #00ff00;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+    width: 100%;
+    height: 2px;
+    background-color: #7aa2f7;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 5px rgba(122, 162, 247, 0.3);
 }
 
 .pulse-indicator {
-  position: absolute;
-  width: 100%;
-  height: 15px;
-  background: linear-gradient(90deg, transparent, #00ff00, transparent);
-  animation: pulseBeat 1.5s ease-in-out infinite;
-  opacity: 0.5;
+    position: absolute;
+    width: 100%;
+    height: 15px;
+    background: linear-gradient(90deg, transparent, #7aa2f7, transparent);
+    animation: pulseBeat 1.5s ease-in-out infinite;
+    opacity: 0.5;
 }
 
 @keyframes radarSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 @keyframes pulseBeat {
-  0% {
-    transform: scaleY(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scaleY(1.5);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scaleY(1);
-    opacity: 0.5;
-  }
+    0% { transform: scaleX(0.3); opacity: 0.3; }
+    50% { transform: scaleX(1); opacity: 0.7; }
+    100% { transform: scaleX(0.3); opacity: 0.3; }
+}
+
+/* Remove scrollbar styles */
+.terminal-body::-webkit-scrollbar {
+    display: none;
+}
+
+.terminal-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
